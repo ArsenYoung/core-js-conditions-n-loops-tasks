@@ -204,62 +204,66 @@ function convertToRomanNumerals(num) {
  *  '1950.2'  => 'one nine five zero point two'
  */
 
-/* function convertDig(num) {
-  switch (num) {
-    case 0: return 'zero';
-    case 1: return 'one';
-    case 2: return 'two';
-    case 3: return 'three';
-    case 4: return 'four';
-    case 5: return 'five';
-    case 6: return 'six';
-    case 7: return 'seven';
-    case 8: return 'eight';
-    case 9: return 'nine';
-    case '.'
-}
-}
-
-function findDivider(num) {
-  let div = 1;
-  let n = num;
-  while (Math.trunc(n / 10) > 0) {
-    div *= 10;
-    n /= 10;
-  }
-  return div;
-} */
-
-function convertNumberToString(/* numberStr */) {
-  throw new Error('Not implemented');
-  /* let res = '';
-  let num = numberStr;
-  let isFirstDigit = true;
-  if (num < 0) {
-    res += 'minus';
-    num *= -1;
-    isFirstDigit = false;
-  }
-
-  if (num >= 10) {
-    let div = findDivider(num);
-    while (Math.trunc(num / div) > 0) {
-      if (isFirstDigit) {
-        res += `${convertDig(Math.trunc(num / div))}`;
-        isFirstDigit = false;
-      } else {
-        res += ` ${convertDig(Math.trunc(num / div))}`;
+function convertNumberToString(numberStr) {
+  let str = '';
+  for (let i = 0; i < numberStr.length; i += 1) {
+    const num = +numberStr[i];
+    if (Number.isFinite(num)) {
+      switch (num) {
+        case 0: {
+          str = `${str}zero`;
+          break;
+        }
+        case 1: {
+          str = `${str}one`;
+          break;
+        }
+        case 2: {
+          str = `${str}two`;
+          break;
+        }
+        case 3: {
+          str = `${str}three`;
+          break;
+        }
+        case 4: {
+          str = `${str}four`;
+          break;
+        }
+        case 5: {
+          str = `${str}five`;
+          break;
+        }
+        case 6: {
+          str = `${str}six`;
+          break;
+        }
+        case 7: {
+          str = `${str}seven`;
+          break;
+        }
+        case 8: {
+          str = `${str}eight`;
+          break;
+        }
+        case 9: {
+          str = `${str}nine`;
+          break;
+        }
+        default:
+          break;
       }
-      num -= div * Math.trunc(num / div);
-      div /= 10;
+    } else if (numberStr[i] === '.' || numberStr[i] === ',') {
+      str = `${str}point`;
+    } else if (numberStr[i] === '-') {
+      str = `${str}minus`;
+    }
+    if (i !== numberStr.length - 1) {
+      str = `${str} `;
     }
   }
 
-  if (num < 10) {
-    res += ` ${convertDig(num)}`;
-  }
-
-  return res; */
+  return str;
 }
 
 /**
@@ -354,13 +358,16 @@ function isContainNumber(num, digit) {
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
 function getBalanceIndex(arr) {
-  for (let i = 1; i < Math.trunc(arr.length / 2) + 1; i += 1) {
+  if (arr.length === 0) {
+    return -1;
+  }
+  for (let i = 1; i < arr.length; i += 1) {
     let sumLeft = 0;
     let sumRight = 0;
     for (let n = 0; n < i; n += 1) {
       sumLeft += arr[n];
     }
-    for (let k = i + 1; k < arr.length; k += 1) {
+    for (let k = arr.length - 1; k > i; k -= 1) {
       sumRight += arr[k];
     }
     if (sumLeft === sumRight) {
@@ -391,25 +398,44 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  /* let matrix = [];
-  let subMatrix = [];
-  for (let i = 1; i <= size; i += 1) {
-    subMatrix[i - 1] = i;
-  }
+function getSpiralMatrix(size) {
+  const matrix = new Array(size);
 
   for (let i = 0; i < size; i += 1) {
-    matrix[i] = subMatrix;
-  }
-
-  let count = 1;
-  for (let i = 0; i < matrix.length; i += 1) {
-    for (let j = 0; j < subMatrix.length; j += 1) {
-      matrix[i][j] = count;
-      count++;
+    matrix[i] = new Array(size);
+    for (let j = 0; j < size; j += 1) {
+      matrix[i][j] = 0;
     }
-  } */
-  throw new Error('Not implemented');
+  }
+  let count = 1;
+  let i = 0;
+  let j = 0;
+  for (let k = 0; k < Math.round(size / 2); k += 1, i = k, j = k) {
+    for (; j < size - k - 1; ) {
+      matrix[i][j] = count;
+      count += 1;
+      j += 1;
+    }
+    for (; i < size - k - 1; ) {
+      matrix[i][j] = count;
+      count += 1;
+      i += 1;
+    }
+    for (; j > k; ) {
+      matrix[i][j] = count;
+      count += 1;
+      j -= 1;
+    }
+    for (; i > k; ) {
+      matrix[i][j] = count;
+      count += 1;
+      i -= 1;
+    }
+  }
+  if (size % 2 !== 0) {
+    matrix[i - 1][j - 1] = count;
+  }
+  return matrix;
 }
 
 /**
@@ -445,8 +471,32 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const myArr = arr;
+  const decrisingFactor = 1.247;
+  let tmp;
+  for (
+    let k = Math.floor(myArr.length / decrisingFactor);
+    k > 1;
+    k = Math.floor(k / decrisingFactor)
+  ) {
+    for (let i = 0, j = k; j < myArr.length; i += 1, j += 1) {
+      if (myArr[i] > myArr[j]) {
+        tmp = myArr[i];
+        myArr[i] = myArr[j];
+        myArr[j] = tmp;
+      }
+    }
+  }
+
+  for (let i = 0; i < myArr.length; i += 1) {
+    if (myArr[i] > myArr[i + 1]) {
+      tmp = myArr[i];
+      myArr[i] = myArr[i + 1];
+      myArr[i + 1] = tmp;
+    }
+  }
+  return myArr;
 }
 
 /**
