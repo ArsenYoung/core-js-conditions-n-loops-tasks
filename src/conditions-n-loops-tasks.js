@@ -536,6 +536,7 @@ function shuffleChar(str, iterations) {
     k += 1;
   }
   return newStr;
+  
 }
 
 /**
